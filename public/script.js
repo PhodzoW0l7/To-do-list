@@ -66,3 +66,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+document.addEventListener("DOMContentLoaded", () => {
+  const todoList = document.querySelector(".todo-list");
+
+  // Event delegation for edit and delete icons
+  todoList.addEventListener("click", (event) => {
+    const target = event.target;
+
+    if (target.classList.contains("remove")) {
+      // Remove the task
+      target.closest("li").remove();
+    } else if (target.classList.contains("edit")) {
+      // Edit the task
+      const taskLabel = target.closest("li").querySelector(".form-check-label");
+      const currentTask = taskLabel.textContent.trim();
+      const newTask = prompt("Edit your task:", currentTask);
+      if (newTask) {
+        taskLabel.firstChild.nodeValue = newTask; // Update the task
+      }
+    }
+  });
+});

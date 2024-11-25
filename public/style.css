@@ -113,3 +113,29 @@ body {
 .remove:hover {
   color: #a71d2a;
 }
+/* Edit and Remove Icons */
+.edit,
+.remove {
+  font-size: 1.2em;
+  cursor: pointer;
+  margin-left: 10px; /* Space between checkbox label and icons */
+  transition: color 0.3s ease;
+}
+
+/* Edit Icon */
+.edit {
+  color: #007bff; /* Blue color for edit icon */
+}
+
+.edit:hover {
+  color: #0056b3; /* Darker blue on hover */
+}
+
+/* Remove Icon */
+.remove {
+  color: #dc3545; /* Red color for remove icon */
+}
+
+.remove:hover {
+  color: #a71d2a; /* Darker red on hover */
+}
