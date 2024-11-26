@@ -2,6 +2,9 @@
 const taskList = document.getElementById("task-list");
 const addTaskButton = document.getElementById("add-task-button");
 
+// Reference the completed task list container
+const completedTaskList = document.getElementById("completed-task-list");
+
 // Array to store the tasks
 let tasks = [];
 
@@ -11,10 +14,11 @@ function loadTasks() {
   tasks.forEach((task) => {
     const taskElement = createTaskElement(task.title, task.content, task.date);
     taskElement.querySelector(".completed-checkbox").checked = task.completed;
-    toggleTaskCompletion(
-      taskElement,
-      taskElement.querySelector(".completed-checkbox")
-    );
+    if (task.completed) {
+      moveToCompletedTasks(taskElement);
+    } else {
+      taskList.appendChild(taskElement);
+    }
   });
 }
 
@@ -36,6 +40,7 @@ function createTaskElement(title, content, date) {
   const completedCheckbox = document.createElement("input");
   completedCheckbox.type = "checkbox";
   completedCheckbox.className = "completed-checkbox";
+  completedCheckbox.id = `checkbox-${Date.now()}`; // Unique ID
   completedCheckbox.addEventListener("change", () =>
     toggleTaskCompletion(taskItem, completedCheckbox)
   );
@@ -137,20 +142,21 @@ function deleteTask(taskElement) {
       (t) => t.title === title && t.content === content && t.date === date
     );
     tasks.splice(taskIndex, 1);
-    taskList.removeChild(taskElement);
+    taskElement.parentElement.removeChild(taskElement);
     saveTasks();
   }
 }
 
 // Function to toggle task completion
 function toggleTaskCompletion(taskElement, checkbox) {
-  taskElement.classList.toggle("completed");
-  if (checkbox.checked) {
-    moveToCompletedTasks(taskElement);
-  } else {
-    taskList.appendChild(taskElement);
-    taskElement.querySelector("h3").style.textDecoration = "none";
+  const parentList = checkbox.checked ? completedTaskList : taskList;
+  if (taskElement.parentElement) {
+    taskElement.parentElement.removeChild(taskElement);
   }
+  parentList.appendChild(taskElement);
+  taskElement.querySelector("h3").style.textDecoration = checkbox.checked
+    ? "line-through"
+    : "none";
 
   const title = taskElement.querySelector("h3").textContent;
   const content = taskElement.querySelector(".task-content").textContent;
@@ -166,6 +172,8 @@ function toggleTaskCompletion(taskElement, checkbox) {
 
 // Function to edit a task
 function editTask(taskElement, oldTitle, oldContent, oldDate) {
+  const parentList = taskElement.parentElement;
+
   // Create an editable form
   const editForm = document.createElement("form");
   editForm.classList.add("edit-form");
@@ -189,7 +197,7 @@ function editTask(taskElement, oldTitle, oldContent, oldDate) {
   cancelButton.type = "button";
   cancelButton.textContent = "Cancel";
   cancelButton.addEventListener("click", () => {
-    taskList.replaceChild(taskElement, editForm);
+    parentList.replaceChild(taskElement, editForm);
   });
 
   editForm.appendChild(titleInput);
@@ -204,7 +212,7 @@ function editTask(taskElement, oldTitle, oldContent, oldDate) {
     const newContent = contentInput.value;
     const newDate = dateInput.value;
     const updatedTask = createTaskElement(newTitle, newContent, newDate);
-    taskList.replaceChild(updatedTask, editForm);
+    parentList.replaceChild(updatedTask, editForm);
 
     const taskIndex = tasks.findIndex(
       (t) =>
@@ -219,20 +227,11 @@ function editTask(taskElement, oldTitle, oldContent, oldDate) {
     saveTasks();
   });
 
-  taskList.replaceChild(editForm, taskElement);
+  parentList.replaceChild(editForm, taskElement);
 }
 
 // Event listener for the add button
 addTaskButton.addEventListener("click", addTask);
-
-// Reference the completed task list container
-const completedTaskList = document.getElementById("completed-task-list");
-
-// Function to move a task to the completed tasks section
-function moveToCompletedTasks(taskElement) {
-  completedTaskList.appendChild(taskElement);
-  taskElement.querySelector("h3").style.textDecoration = "line-through";
-}
 
 // Load tasks from local storage on page load
 loadTasks();
