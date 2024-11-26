@@ -6,71 +6,40 @@
     <title>To-Do List</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="snippet-body">
-    <div class="page-content page-container" id="page-content">
-      <div class="padding">
-        <div class="row container d-flex justify-content-center">
-          <div class="col-md-12">
-            <div class="card px-3">
-              <div class="card-body">
-                <h4 class="card-title">Todo list</h4>
-                <div class="add-items d-flex">
-                  <input
-                    type="text"
-                    class="form-control todo-list-input"
-                    placeholder="What do you need to do today?"
-                  />
-                  <button
-                    class="add btn btn-primary font-weight-bold todo-list-add-btn"
-                  >
-                    Add
-                  </button>
-                </div>
-                <div class="list-wrapper">
-                  <ul class="d-flex flex-column-reverse todo-list">
-                    <li>
-                      <div class="form-check">
-                        <label class="form-check-label">
-                          <input class="checkbox" type="checkbox" /> For what
-                          reason would it be advisable.
-                          <i class="input-helper"></i>
-                        </label>
-                      </div>
-                      <i
-                        class="edit mdi mdi-pencil-outline"
-                        title="Edit Task"
-                      ></i>
-                      <i
-                        class="remove mdi mdi-close-circle-outline"
-                        title="Delete Task"
-                      ></i>
-                    </li>
-                    <li class="completed">
-                      <div class="form-check">
-                        <label class="form-check-label">
-                          <input class="checkbox" type="checkbox" checked="" />
-                          For what reason would it be advisable for me to think.
-                          <i class="input-helper"></i>
-                        </label>
-                      </div>
-                      <i
-                        class="edit mdi mdi-pencil-outline"
-                        title="Edit Task"
-                      ></i>
-                      <i
-                        class="remove mdi mdi-close-circle-outline"
-                        title="Delete Task"
-                      ></i>
-                    </li>
-                    <!-- Add more task items as needed -->
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+  <body>
+    <div class="container">
+      <h1>To-Do List</h1>
+      <div class="input-section">
+        <input
+          type="text"
+          id="task-title"
+          placeholder="Enter task heading"
+          required
+        />
+        <input
+          type="text"
+          id="task-content"
+          placeholder="Enter task content"
+          required
+        />
+        <input type="date" id="task-date" required />
+        <button id="add-task-button">Create List</button>
       </div>
     </div>
+    <div class="container">
+      <h1>Lists</h1>
+      <div class="task-list" id="task-list">
+        <!-- Task items will be dynamically added here -->
+      </div>
+    </div>
+
+    <div class="container">
+      <h1>Completed List</h1>
+      <div class="task-list" id="completed-task-list">
+        <!-- Completed tasks will be displayed here -->
+      </div>
+    </div>
+
     <script src="script.js"></script>
   </body>
 </html>
