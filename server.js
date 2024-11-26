@@ -11,10 +11,13 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 // Connect to MongoDB
-mongoose.connect("mongodb://your-mongodb-connection-string", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  "mongodb+srv://Phodzo:Phodzo24@mern.e2ocybl.mongodb.net/?retryWrites=true&w=majority&appName=mern",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 // Define a Task schema and model
 const taskSchema = new mongoose.Schema({

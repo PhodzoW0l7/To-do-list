@@ -2,6 +2,27 @@
 const taskList = document.getElementById("task-list");
 const addTaskButton = document.getElementById("add-task-button");
 
+// Array to store the tasks
+let tasks = [];
+
+// Load tasks from local storage on page load
+function loadTasks() {
+  tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+  tasks.forEach((task) => {
+    const taskElement = createTaskElement(task.title, task.content, task.date);
+    taskElement.querySelector(".completed-checkbox").checked = task.completed;
+    toggleTaskCompletion(
+      taskElement,
+      taskElement.querySelector(".completed-checkbox")
+    );
+  });
+}
+
+// Save tasks to local storage
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
 // Function to create a task element
 function createTaskElement(title, content, date) {
   // Task container
@@ -64,6 +85,20 @@ function createTaskElement(title, content, date) {
   taskItem.appendChild(taskDetails);
   taskItem.appendChild(taskActions);
 
+  // Add event listener to save tasks on any change
+  taskItem.addEventListener("change", () => {
+    const taskIndex = tasks.findIndex(
+      (t) => t.title === title && t.content === content && t.date === date
+    );
+    tasks[taskIndex] = {
+      title,
+      content,
+      date,
+      completed: taskItem.classList.contains("completed"),
+    };
+    saveTasks();
+  });
+
   return taskItem;
 }
 
@@ -85,12 +120,25 @@ function addTask() {
   document.getElementById("task-title").value = "";
   document.getElementById("task-content").value = "";
   document.getElementById("task-date").value = "";
+
+  tasks.push({ title, content, date, completed: false });
+  saveTasks();
 }
 
 // Function to delete a task
 function deleteTask(taskElement) {
   if (confirm("Are you sure you want to delete this task?")) {
+    const title = taskElement.querySelector("h3").textContent;
+    const content = taskElement.querySelector(".task-content").textContent;
+    const date = taskElement
+      .querySelector(".task-date")
+      .textContent.replace("Date: ", "");
+    const taskIndex = tasks.findIndex(
+      (t) => t.title === title && t.content === content && t.date === date
+    );
+    tasks.splice(taskIndex, 1);
     taskList.removeChild(taskElement);
+    saveTasks();
   }
 }
 
@@ -98,10 +146,22 @@ function deleteTask(taskElement) {
 function toggleTaskCompletion(taskElement, checkbox) {
   taskElement.classList.toggle("completed");
   if (checkbox.checked) {
-    taskElement.querySelector("h3").style.textDecoration = "line-through";
+    moveToCompletedTasks(taskElement);
   } else {
+    taskList.appendChild(taskElement);
     taskElement.querySelector("h3").style.textDecoration = "none";
   }
+
+  const title = taskElement.querySelector("h3").textContent;
+  const content = taskElement.querySelector(".task-content").textContent;
+  const date = taskElement
+    .querySelector(".task-date")
+    .textContent.replace("Date: ", "");
+  const taskIndex = tasks.findIndex(
+    (t) => t.title === title && t.content === content && t.date === date
+  );
+  tasks[taskIndex].completed = checkbox.checked;
+  saveTasks();
 }
 
 // Function to edit a task
@@ -145,6 +205,18 @@ function editTask(taskElement, oldTitle, oldContent, oldDate) {
     const newDate = dateInput.value;
     const updatedTask = createTaskElement(newTitle, newContent, newDate);
     taskList.replaceChild(updatedTask, editForm);
+
+    const taskIndex = tasks.findIndex(
+      (t) =>
+        t.title === oldTitle && t.content === oldContent && t.date === oldDate
+    );
+    tasks[taskIndex] = {
+      title: newTitle,
+      content: newContent,
+      date: newDate,
+      completed: tasks[taskIndex].completed,
+    };
+    saveTasks();
   });
 
   taskList.replaceChild(editForm, taskElement);
@@ -162,13 +234,5 @@ function moveToCompletedTasks(taskElement) {
   taskElement.querySelector("h3").style.textDecoration = "line-through";
 }
 
-// Modify the toggleTaskCompletion function
-function toggleTaskCompletion(taskElement, checkbox) {
-  taskElement.classList.toggle("completed");
-  if (checkbox.checked) {
-    moveToCompletedTasks(taskElement);
-  } else {
-    taskList.appendChild(taskElement);
-    taskElement.querySelector("h3").style.textDecoration = "none";
-  }
-}
+// Load tasks from local storage on page load
+loadTasks();
