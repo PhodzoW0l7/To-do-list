@@ -199,3 +199,144 @@ h1 {
   color: #56baed;
   font-weight: 600;
 }
+/* Action buttons */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit,
+.delete {
+  background-color: transparent;
+  border: none;
+  color: #56baed;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.edit:hover,
+.delete:hover {
+  background-color: #f6f6f6;
+}
+
+.edit {
+  background-color: #3bbaec;
+  color: white;
+}
+
+.edit:hover {
+  background-color: #3bbaec;
+}
+
+.delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.delete:hover {
+  background-color: #c0392b;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container {
+    padding: 20px;
+    margin-top: 10px;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .input-section input {
+    width: 90%;
+    font-size: 14px;
+  }
+
+  .input-section button {
+    width: 90%;
+    font-size: 14px;
+  }
+
+  .task-item {
+    padding: 8px;
+  }
+
+  .completed-checkbox {
+    width: 18px;
+    height: 18px;
+  }
+
+  .completed-checkbox-label {
+    font-size: 12px;
+  }
+
+  .edit,
+  .delete {
+    font-size: 12px;
+    padding: 6px 12px;
+    width: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container {
+    padding: 15px;
+    margin-top: 10px;
+    width: 95%;
+    max-width: 350px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .input-section input {
+    width: 95%;
+    font-size: 12px;
+  }
+
+  .input-section button {
+    width: 95%;
+    font-size: 12px;
+  }
+
+  .task-item {
+    padding: 6px;
+  }
+
+  .completed-checkbox {
+    width: 16px;
+    height: 16px;
+  }
+
+  .completed-checkbox-label {
+    font-size: 10px;
+  }
+
+  .edit,
+  .delete {
+    font-size: 10px;
+    padding: 4px 8px;
+    width: 60px;
+  }
+}

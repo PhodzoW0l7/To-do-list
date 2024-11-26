@@ -19,9 +19,10 @@ function createTaskElement(title, content, date) {
     toggleTaskCompletion(taskItem, completedCheckbox)
   );
 
-  const completedCheckboxLabel = document.createElement("span");
+  const completedCheckboxLabel = document.createElement("label");
   completedCheckboxLabel.className = "completed-checkbox-label";
   completedCheckboxLabel.textContent = "Mark as complete";
+  completedCheckboxLabel.htmlFor = completedCheckbox.id;
 
   completedCheckboxContainer.appendChild(completedCheckbox);
   completedCheckboxContainer.appendChild(completedCheckboxLabel);
@@ -37,7 +38,7 @@ function createTaskElement(title, content, date) {
   taskContent.className = "task-content";
   taskContent.textContent = content;
 
-  taskDetails.insertBefore(completedCheckbox, taskDetails.firstChild);
+  taskDetails.appendChild(completedCheckboxContainer);
   taskDetails.appendChild(taskHeading);
   taskDetails.appendChild(taskDate);
   taskDetails.appendChild(taskContent);
