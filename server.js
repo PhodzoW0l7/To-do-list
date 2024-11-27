@@ -1,5 +1,4 @@
 const express = require("express");
-const serverless = require("serverless-http"); // For serverless compatibility
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -11,10 +10,14 @@ app.use(bodyParser.json());
 app.use(express.static("public"));
 
 // Connect to MongoDB using an environment variable
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+if (process.env.MONGO_URI) {
+  mongoose.connect(process.env.MONGO_URI, {});
+} else {
+  mongoose.connect(
+    "mongodb+srv://Phodzo:Phodzo24@mern.e2ocybl.mongodb.net/?retryWrites=true&w=majority&appName=mern",
+    {}
+  );
+}
 
 // Define a Task schema and model
 const taskSchema = new mongoose.Schema({
@@ -50,5 +53,7 @@ app.put("/api/tasks/:id", async (req, res) => {
   res.status(200).send();
 });
 
-// Export the app for serverless
-module.exports.handler = serverless(app);
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
