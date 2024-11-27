@@ -1,23 +1,20 @@
 const express = require("express");
+const serverless = require("serverless-http"); // For serverless compatibility
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
-// Connect to MongoDB
-mongoose.connect(
-  "mongodb+srv://Phodzo:Phodzo24@mern.e2ocybl.mongodb.net/?retryWrites=true&w=majority&appName=mern",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+// Connect to MongoDB using an environment variable
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 // Define a Task schema and model
 const taskSchema = new mongoose.Schema({
@@ -46,7 +43,12 @@ app.delete("/api/tasks/:id", async (req, res) => {
   res.status(204).send();
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+// Update a task
+app.put("/api/tasks/:id", async (req, res) => {
+  const { completed } = req.body;
+  await Task.findByIdAndUpdate(req.params.id, { completed });
+  res.status(200).send();
 });
+
+// Export the app for serverless
+module.exports.handler = serverless(app);

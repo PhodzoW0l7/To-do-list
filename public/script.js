@@ -33,10 +33,11 @@ function createTaskElement(title, content, date) {
   const taskItem = document.createElement("div");
   taskItem.className = "task-item";
 
-  // Completed checkbox
-  const completedCheckboxContainer = document.createElement("div");
-  completedCheckboxContainer.className = "completed-checkbox-container";
+  // Action buttons container (top of the task item)
+  const taskActionsTop = document.createElement("div");
+  taskActionsTop.className = "task-actions-top";
 
+  // Completed checkbox
   const completedCheckbox = document.createElement("input");
   completedCheckbox.type = "checkbox";
   completedCheckbox.className = "completed-checkbox";
@@ -47,62 +48,51 @@ function createTaskElement(title, content, date) {
 
   const completedCheckboxLabel = document.createElement("label");
   completedCheckboxLabel.className = "completed-checkbox-label";
-  completedCheckboxLabel.textContent = "Mark as complete";
+  completedCheckboxLabel.textContent = "Mark as Complete";
   completedCheckboxLabel.htmlFor = completedCheckbox.id;
 
-  completedCheckboxContainer.appendChild(completedCheckbox);
-  completedCheckboxContainer.appendChild(completedCheckboxLabel);
-
-  // Task details
-  const taskDetails = document.createElement("div");
-  const taskHeading = document.createElement("h3");
-  taskHeading.textContent = title;
-  const taskDate = document.createElement("span");
-  taskDate.className = "task-date";
-  taskDate.textContent = `Date: ${date}`;
-  const taskContent = document.createElement("div");
-  taskContent.className = "task-content";
-  taskContent.textContent = content;
-
-  taskDetails.appendChild(completedCheckboxContainer);
-  taskDetails.appendChild(taskHeading);
-  taskDetails.appendChild(taskDate);
-  taskDetails.appendChild(taskContent);
-
-  // Action buttons
-  const taskActions = document.createElement("div");
-  taskActions.className = "actions";
+  // Edit button
   const editButton = document.createElement("button");
   editButton.className = "edit";
   editButton.textContent = "Edit";
   editButton.addEventListener("click", () =>
     editTask(taskItem, title, content, date)
   );
+
+  // Delete button
   const deleteButton = document.createElement("button");
   deleteButton.className = "delete";
   deleteButton.textContent = "Delete";
   deleteButton.addEventListener("click", () => deleteTask(taskItem));
 
-  taskActions.appendChild(editButton);
-  taskActions.appendChild(deleteButton);
+  // Append action buttons to the top container
+  taskActionsTop.appendChild(completedCheckbox);
+  taskActionsTop.appendChild(completedCheckboxLabel);
+  taskActionsTop.appendChild(editButton);
+  taskActionsTop.appendChild(deleteButton);
 
-  // Append details and actions to task item
+  // Task details
+  const taskDetails = document.createElement("div");
+  taskDetails.className = "task-details";
+
+  const taskHeading = document.createElement("h3");
+  taskHeading.textContent = title;
+
+  const taskDate = document.createElement("span");
+  taskDate.className = "task-date";
+  taskDate.textContent = `Date: ${date}`;
+
+  const taskContent = document.createElement("div");
+  taskContent.className = "task-content";
+  taskContent.textContent = content;
+
+  taskDetails.appendChild(taskHeading);
+  taskDetails.appendChild(taskDate);
+  taskDetails.appendChild(taskContent);
+
+  // Append the top actions and details to the task item
+  taskItem.appendChild(taskActionsTop);
   taskItem.appendChild(taskDetails);
-  taskItem.appendChild(taskActions);
-
-  // Add event listener to save tasks on any change
-  taskItem.addEventListener("change", () => {
-    const taskIndex = tasks.findIndex(
-      (t) => t.title === title && t.content === content && t.date === date
-    );
-    tasks[taskIndex] = {
-      title,
-      content,
-      date,
-      completed: taskItem.classList.contains("completed"),
-    };
-    saveTasks();
-  });
 
   return taskItem;
 }
